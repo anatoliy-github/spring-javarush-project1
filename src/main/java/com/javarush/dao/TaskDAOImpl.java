@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,16 +17,21 @@ public class TaskDAOImpl implements TaskDAO {
         this.sessionFactory = sessionFactory;
     }
 
-    @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public List<Task> getAll() {
-        List<Task> allTasks = getSession().createQuery("from Task", Task.class)
+        return getSession().createQuery("from Task", Task.class)
                 .getResultList();
-        return allTasks;
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
+    public int getCount() {
+        Query<Long> query = getSession().createQuery("select count(*) from Task", Long.class);
+        return Math.toIntExact(query.uniqueResult());
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public List<Task> getAll(int offset, int limit) {
         Query<Task> query = getSession().createQuery("from Task", Task.class);
         query.setFirstResult(offset);
@@ -33,6 +39,25 @@ public class TaskDAOImpl implements TaskDAO {
         return query.getResultList();
     }
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Task getById(Integer id) {
+        Query<Task> query = getSession().createQuery("from Task where id = :ID", Task.class);
+        query.setParameter("ID", id);
+        return query.uniqueResult();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void saveOrUpdate(Task task) {
+        getSession().persist(task);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void delete(Task task) {
+        getSession().remove(task);
+    }
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();

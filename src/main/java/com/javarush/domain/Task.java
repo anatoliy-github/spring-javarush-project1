@@ -1,6 +1,5 @@
 package com.javarush.domain;
 
-
 import javax.persistence.*;
 
 @Entity
