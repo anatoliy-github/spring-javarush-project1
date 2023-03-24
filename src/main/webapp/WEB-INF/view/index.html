@@ -53,7 +53,21 @@
                     </li>
                 </ul>
             </nav>
-
+            <h3>Create new Task:</h3>
+            <table class="table table-striped mb-5">
+                <tr>
+                    <th>-</th>
+                    <td><input type="text" id="new-task-description" class="form-control" value="" placeholder="Task description"></td>
+                    <td><select name="" id="new-task-status" class="form-select">
+                        <option>- Status -</option>
+                        <option value="IN_PROGRESS">IN_PROGRESS</option>
+                        <option value="DONE">DONE</option>
+                        <option value="PAUSED">PAUSED</option>
+                    </select></td>
+                    <td><button type="button" class="btn btn-info btn-create">Create</button></td>
+                    <td></td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
@@ -88,14 +102,14 @@ jQuery(document).ready(function($) {
         td.html('<button type="button" class="btn btn-info btn-save" data-id="'+ id +'">Save</button>');
         $(".btn-delete[data-id='" + id + "']").prop('disabled', true);
 
-        let editDesc = '<div class="form-floating"><input type="text" id="input-desc-'+ id +'" class="form-control" value="'+ tdDesc.text() +'"></div>';
+        let editDesc = '<input type="text" id="input-desc-'+ id +'" class="form-control" value="'+ tdDesc.text() +'">';
         tdDesc.html(editDesc);
 
-        let editStatus = '<div class="form-floating"><select id="select-status-'+ id +'" class="form-select">' +
+        let editStatus = '<select id="select-status-'+ id +'" class="form-select">' +
             '<option value="IN_PROGRESS">IN_PROGRESS</option>' +
             '<option value="DONE">DONE</option>' +
             '<option value="PAUSED">PAUSED</option>' +
-            '</select></div>';
+            '</select>';
         tdStatus.html(editStatus);
     });
 
@@ -117,13 +131,30 @@ jQuery(document).ready(function($) {
             data: JSON.stringify({"description": desc, "status": stat })
         });
 
+        setTimeout(() => {
+            window.location.reload();
+        }, 300);
+    });
+
+    $('.btn-create').on('click', function() {
+        let desc = $('#new-task-description').val();
+        let stat = $('#new-task-status').val();
+        console.log(desc + ' - ' + stat);
+        $.ajax({
+            url: "",
+            type: "POST",
+            dataType: "json",
+            contentType: 'application/json;charset=UTF-8',
+            async: false,
+            data: JSON.stringify({"description": desc, "status": stat })
+        });
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 300);
     })
 
-});
-
-jQuery(document).ready(function($) {
-    //your jQuery function
-});
+})
 </script>
 </body>
 </html>
