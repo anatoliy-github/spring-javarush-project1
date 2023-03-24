@@ -63,7 +63,18 @@
 </footer>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-
+jQuery(document).ready(function($) {
+    $('.btn-delete').on('click', function () {
+        let id = $(this).data('id');
+        $.ajax({
+            url: id,
+            type: "DELETE",
+            success: function () {
+                window.location.reload();
+            }
+        })
+    })
+})
 </script>
 </body>
 </html>
